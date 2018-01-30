@@ -10,12 +10,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var NumCount: UILabel!
     @IBOutlet weak var HelloBtn: UIButton!
-    
-    @IBOutlet weak var WorkView: UIView!
-    @IBOutlet weak var BackBtn: UIButton!
-    @IBOutlet weak var WorkText: UITextView!
-    
+    @IBOutlet weak var ClickProgress: UIProgressView!
+    @IBOutlet weak var Stepper: UIStepper!
+    var clickCount = 0
+    var toAdd = 1
+    var curProg: Float = 0
+    var timer = Timer()
+    var timeWait: Float = 50
     
     
     override func viewDidLoad() {
@@ -24,18 +27,22 @@ class ViewController: UIViewController {
     }
 
     @IBAction func HelloPressed(_ sender: Any) {
-        self.HelloBtn.isHidden = true
-        self.WorkView.isHidden = false
-        self.WorkText.isHidden = false
-        self.BackBtn.isHidden = false
+        clickCount += toAdd
+        curProg = 0
+        NumCount.text = String(clickCount)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: "setProgressBar", userInfo: nil, repeats: false)
     }
-    @IBAction func BackPressed(_ sender: Any) {
-        self.HelloBtn.isHidden = false
-        self.WorkView.isHidden = true
-        self.WorkText.isHidden = true
-        self.BackBtn.isHidden = true
+    @IBAction func StepPressed(_ sender: Any) {
+        toAdd = Int(Stepper.value)
     }
-    
+    func setProgressBar() {
+        while curProg < timeWait {
+            HelloBtn.isEnabled = false
+            ClickProgress.progress = curProg / timeWait
+            curProg += 1
+        }
+        HelloBtn.isEnabled = true
+    }
 
 }
 
